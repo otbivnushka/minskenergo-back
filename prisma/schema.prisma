@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique @db.VarChar(100)
+  passwordHash  String   @map("password_hash") @db.VarChar(256)
+  role          String   @db.VarChar(20)
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@map("users")
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(200)
+  dateStart DateTime @map("date_start") @db.Date
+  dateEnd   DateTime @map("date_end") @db.Date
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  lessons Lesson[]
+
+  @@map("groups")
+}
+
+model Teacher {
+  id        Int      @id @default(autoincrement())
+  fullName  String   @map("full_name") @db.VarChar(200)
+  degree    String?  @db.VarChar(100)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  lessons Lesson[]
+
+  @@map("teachers")
+}
+
+model Classroom {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(200)
+  address   String?  @db.VarChar(300)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  lessons Lesson[]
+
+  @@map("classrooms")
+}
+
+model Topic {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(500)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  lessons Lesson[]
+
+  @@map("topics")
+}
+
+model LessonType {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  lessons Lesson[]
+
+  @@map("lesson_types")
+}
+
+model Lesson {
+  id           Int    @id @default(autoincrement())
+  groupId      Int    @map("group_id")
+  date         DateTime @db.Date
+  timeStart    DateTime @map("time_start") @db.Time
+  timeEnd      DateTime @map("time_end") @db.Time
+  topicId      Int      @map("topic_id")
+  lessonTypeId Int      @map("lesson_type_id")
+  teacherId    Int      @map("teacher_id")
+  classroomId  Int      @map("classroom_id")
+  sortOrder    Int      @default(0) @map("sort_order")
+
+  group      Group      @relation(fields: [groupId], references: [id])
+  topic      Topic      @relation(fields: [topicId], references: [id])
+  lessonType LessonType @relation(fields: [lessonTypeId], references: [id])
+  teacher    Teacher    @relation(fields: [teacherId], references: [id])
+  classroom  Classroom  @relation(fields: [classroomId], references: [id])
+
+  @@map("lessons")
+}
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(200)
+  phone     String   @db.VarChar(50)
+  note      String?  @db.VarChar(200)
+  sortOrder Int      @default(0) @map("sort_order")
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz()
+
+  @@map("departments")
+}
+
+model Contact {
+  id             Int    @id @default(autoincrement())
+  legalAddress   String? @map("legal_address")
+  actualAddress  String? @map("actual_address")
+  email          String? @db.VarChar(100)
+  workHours      String? @map("work_hours")
+  transportInfo  String? @map("transport_info")
+  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz()
+
+  @@map("contacts")
+}
+
+model AboutSection {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(200)
+  content   String
+  icon      String?  @db.VarChar(50)
+  sortOrder Int      @default(0) @map("sort_order")
+  isVisible Boolean  @default(true) @map("is_visible")
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz()
+
+  @@map("about_sections")
+}
+
+model Appeal {
+  id        Int      @id @default(autoincrement())
+  text      String
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@map("appeals")
+}
