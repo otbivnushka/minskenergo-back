@@ -15,10 +15,16 @@ export class GroupsService {
     return group;
   }
 
-  async create(dto: { name: string; dateStart: string; dateEnd: string }) {
+  async create(dto: {
+    name: string;
+    curriculumId?: number;
+    dateStart: string;
+    dateEnd: string;
+  }) {
     return this.prisma.group.create({
       data: {
         name: dto.name,
+        curriculumId: dto.curriculumId,
         dateStart: new Date(dto.dateStart),
         dateEnd: new Date(dto.dateEnd),
       },
@@ -27,13 +33,19 @@ export class GroupsService {
 
   async update(
     id: number,
-    dto: Partial<{ name: string; dateStart: string; dateEnd: string }>,
+    dto: Partial<{
+      name: string;
+      curriculumId?: number;
+      dateStart: string;
+      dateEnd: string;
+    }>,
   ) {
     const group = await this.prisma.group.findUnique({ where: { id } });
     if (!group) throw new NotFoundException('Group not found');
 
     const data: Record<string, unknown> = {};
     if (dto.name !== undefined) data.name = dto.name;
+    if (dto.curriculumId !== undefined) data.curriculumId = dto.curriculumId;
     if (dto.dateStart !== undefined) data.dateStart = new Date(dto.dateStart);
     if (dto.dateEnd !== undefined) data.dateEnd = new Date(dto.dateEnd);
 

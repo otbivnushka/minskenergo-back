@@ -19,13 +19,15 @@ model User {
 }
 
 model Group {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(200)
-  dateStart DateTime @map("date_start") @db.Date
-  dateEnd   DateTime @map("date_end") @db.Date
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(200)
+  curriculumId Int?     @map("curriculum_id")
+  dateStart    DateTime @map("date_start") @db.Date
+  dateEnd      DateTime @map("date_end") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
-  lessons Lesson[]
+  lessons   Lesson[]
+  curriculum Curriculum? @relation(fields: [curriculumId], references: [id])
 
   @@map("groups")
 }
@@ -57,9 +59,32 @@ model Topic {
   name      String   @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
-  lessons Lesson[]
+  lessons    Lesson[]
+  curriculums CurriculumsOnTopics[]
 
   @@map("topics")
+}
+
+model Curriculum {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(300)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  groups Group[]
+  topics CurriculumsOnTopics[]
+
+  @@map("curriculums")
+}
+
+model CurriculumsOnTopics {
+  curriculumId Int @map("curriculum_id")
+  topicId      Int @map("topic_id")
+
+  curriculum Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
+  topic      Topic      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([curriculumId, topicId])
+  @@map("curriculums_topics")
 }
 
 model LessonType {
@@ -127,6 +152,17 @@ model AboutSection {
   @@map("about_sections")
 }
 
+model Image {
+  id           Int      @id @default(autoincrement())
+  filename     String   @db.VarChar(500)
+  originalName String   @map("original_name") @db.VarChar(500)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  slides Slide[]
+
+  @@map("images")
+}
+
 model Appeal {
   id        Int      @id @default(autoincrement())
   text      String
@@ -134,4 +170,15 @@ model Appeal {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   @@map("appeals")
+}
+
+model Slide {
+    id        Int      @id @default(autoincrement())
+    imageId   Int    @map("image_id")
+    title String 
+    subtitle String
+
+    image Image @relation(fields: [imageId], references: [id])
+
+    @@map("slides")
 }

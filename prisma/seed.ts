@@ -9,35 +9,44 @@ const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // Users
+  // 1. Clear all tables (reverse FK order)
+  await prisma.$transaction([
+    prisma.curriculumsOnTopics.deleteMany(),
+    prisma.lesson.deleteMany(),
+    prisma.group.deleteMany(),
+    prisma.curriculum.deleteMany(),
+    prisma.appeal.deleteMany(),
+    prisma.aboutSection.deleteMany(),
+    prisma.contact.deleteMany(),
+    prisma.department.deleteMany(),
+    prisma.lessonType.deleteMany(),
+    prisma.topic.deleteMany(),
+    prisma.teacher.deleteMany(),
+    prisma.classroom.deleteMany(),
+    prisma.user.deleteMany(),
+  ]);
+
+  // 2. Users
   const adminHash = await bcrypt.hash('admin123', 10);
   const methodistHash = await bcrypt.hash('methodist123', 10);
 
-  await prisma.user.upsert({
-    where: { username: 'admin' },
-    update: {},
-    create: { username: 'admin', passwordHash: adminHash, role: 'admin' },
-  });
-  await prisma.user.upsert({
-    where: { username: 'methodist' },
-    update: {},
-    create: { username: 'methodist', passwordHash: methodistHash, role: 'methodist' },
+  await prisma.user.createMany({
+    data: [
+      { username: 'admin', passwordHash: adminHash, role: 'admin' },
+      { username: 'methodist', passwordHash: methodistHash, role: 'methodist' },
+    ],
   });
 
-  // Lesson Types
-  const lessonTypes = ['Лекция', 'Практика', 'Экскурсия', 'Зачёт', 'Лабораторная работа'];
+  // 3. Lesson Types
+  const lessonTypeNames = ['Лекция', 'Практика', 'Экскурсия', 'Зачёт', 'Лабораторная работа'];
   const lessonTypeRecords: Record<string, number> = {};
-  for (const name of lessonTypes) {
-    const record = await prisma.lessonType.upsert({
-      where: { id: lessonTypes.indexOf(name) + 1 },
-      update: { name },
-      create: { name },
-    });
+  for (const name of lessonTypeNames) {
+    const record = await prisma.lessonType.create({ data: { name } });
     lessonTypeRecords[name] = record.id;
   }
 
-  // Topics
-  const topics = [
+  // 4. Topics
+  const topicNames = [
     'Документы и задачи Госэнергогазнадзора',
     'Охрана труда в электроустановках',
     'Правила технической эксплуатации',
@@ -45,16 +54,12 @@ async function main() {
     'Первая помощь пострадавшим',
   ];
   const topicRecords: Record<string, number> = {};
-  for (const name of topics) {
-    const record = await prisma.topic.upsert({
-      where: { id: topics.indexOf(name) + 1 },
-      update: { name },
-      create: { name },
-    });
+  for (const name of topicNames) {
+    const record = await prisma.topic.create({ data: { name } });
     topicRecords[name] = record.id;
   }
 
-  // Teachers
+  // 5. Teachers
   const teachers = [
     { fullName: 'Иванов Иван Иванович', degree: 'к.т.н.' },
     { fullName: 'Петрова Мария Сергеевна', degree: 'д.э.н.' },
@@ -63,15 +68,11 @@ async function main() {
   ];
   const teacherRecords: Record<string, number> = {};
   for (const t of teachers) {
-    const record = await prisma.teacher.upsert({
-      where: { id: teachers.indexOf(t) + 1 },
-      update: t,
-      create: t,
-    });
+    const record = await prisma.teacher.create({ data: t });
     teacherRecords[t.fullName] = record.id;
   }
 
-  // Classrooms
+  // 6. Classrooms
   const classrooms = [
     { name: 'Учебный центр, ауд. 101', address: null },
     { name: 'Учебный центр, ауд. 205', address: null },
@@ -79,38 +80,59 @@ async function main() {
   ];
   const classroomRecords: Record<string, number> = {};
   for (const c of classrooms) {
-    const record = await prisma.classroom.upsert({
-      where: { id: classrooms.indexOf(c) + 1 },
-      update: c,
-      create: c,
-    });
+    const record = await prisma.classroom.create({ data: c });
     classroomRecords[c.name] = record.id;
   }
 
-  // Groups
-  await prisma.group.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
+  // 7. Curriculums
+  const curriculumNames = [
+    'Электробезопасность (II группа)',
+    'Электробезопасность (III группа)',
+    'Пожарно-технический минимум',
+  ];
+  const curriculumRecords: Record<string, number> = {};
+  for (const name of curriculumNames) {
+    const record = await prisma.curriculum.create({ data: { name } });
+    curriculumRecords[name] = record.id;
+  }
+
+  // 8. Curriculums <-> Topics
+  const curriculumTopicLinks = [
+    { curriculumName: 'Электробезопасность (II группа)', topicNames: ['Документы и задачи Госэнергогазнадзора', 'Охрана труда в электроустановках', 'Первая помощь пострадавшим'] },
+    { curriculumName: 'Электробезопасность (III группа)', topicNames: ['Документы и задачи Госэнергогазнадзора', 'Охрана труда в электроустановках', 'Правила технической эксплуатации', 'Первая помощь пострадавшим'] },
+    { curriculumName: 'Пожарно-технический минимум', topicNames: ['Пожарная безопасность', 'Первая помощь пострадавшим'] },
+  ];
+  await prisma.curriculumsOnTopics.createMany({
+    data: curriculumTopicLinks.flatMap((link) =>
+      link.topicNames.map((topicName) => ({
+        curriculumId: curriculumRecords[link.curriculumName],
+        topicId: topicRecords[topicName],
+      })),
+    ),
+  });
+
+  // 9. Groups
+  const group1 = await prisma.group.create({
+    data: {
       name: 'Группа Э-2026-01',
+      curriculumId: curriculumRecords['Электробезопасность (II группа)'],
       dateStart: new Date('2026-01-15'),
       dateEnd: new Date('2026-06-30'),
     },
   });
-  await prisma.group.upsert({
-    where: { id: 2 },
-    update: {},
-    create: {
+  const group2 = await prisma.group.create({
+    data: {
       name: 'Группа Э-2026-02',
+      curriculumId: curriculumRecords['Электробезопасность (III группа)'],
       dateStart: new Date('2026-03-01'),
       dateEnd: new Date('2026-08-31'),
     },
   });
 
-  // Lessons
+  // 10. Lessons
   const lessons = [
     {
-      groupId: 1,
+      groupId: group1.id,
       date: '2026-05-18',
       timeStart: '12:00',
       timeEnd: '14:00',
@@ -120,7 +142,7 @@ async function main() {
       classroomName: 'филиал УЦ, ауд. 207',
     },
     {
-      groupId: 1,
+      groupId: group1.id,
       date: '2026-05-18',
       timeStart: '14:00',
       timeEnd: '16:00',
@@ -130,7 +152,7 @@ async function main() {
       classroomName: 'Учебный центр, ауд. 101',
     },
     {
-      groupId: 2,
+      groupId: group2.id,
       date: '2026-05-19',
       timeStart: '10:00',
       timeEnd: '12:00',
@@ -140,44 +162,34 @@ async function main() {
       classroomName: 'Учебный центр, ауд. 205',
     },
   ];
-  for (const [i, l] of lessons.entries()) {
-    await prisma.lesson.upsert({
-      where: { id: i + 1 },
-      update: {},
-      create: {
-        groupId: l.groupId,
-        date: new Date(l.date),
-        timeStart: new Date(`2000-01-01T${l.timeStart}:00`),
-        timeEnd: new Date(`2000-01-01T${l.timeEnd}:00`),
-        topicId: topicRecords[l.topicName],
-        lessonTypeId: lessonTypeRecords[l.lessonTypeName],
-        teacherId: teacherRecords[l.teacherName],
-        classroomId: classroomRecords[l.classroomName],
-        sortOrder: 0,
-      },
-    });
-  }
+  await prisma.lesson.createMany({
+    data: lessons.map((l) => ({
+      groupId: l.groupId,
+      date: new Date(l.date),
+      timeStart: new Date(`2000-01-01T${l.timeStart}:00`),
+      timeEnd: new Date(`2000-01-01T${l.timeEnd}:00`),
+      topicId: topicRecords[l.topicName],
+      lessonTypeId: lessonTypeRecords[l.lessonTypeName],
+      teacherId: teacherRecords[l.teacherName],
+      classroomId: classroomRecords[l.classroomName],
+      sortOrder: 0,
+    })),
+  });
 
-  // Departments
+  // 11. Departments
   const departments = [
     { name: 'Отдел кадров', phone: '123-45-67', note: 'каб. 101' },
     { name: 'Бухгалтерия', phone: '123-45-68', note: 'каб. 205' },
     { name: 'Учебный отдел', phone: '123-45-69', note: 'каб. 302' },
     { name: 'Техническая поддержка', phone: '123-45-70', note: null },
   ];
-  for (const [i, d] of departments.entries()) {
-    await prisma.department.upsert({
-      where: { id: i + 1 },
-      update: d,
-      create: { ...d, sortOrder: i },
-    });
-  }
+  await prisma.department.createMany({
+    data: departments.map((d, i) => ({ ...d, sortOrder: i })),
+  });
 
-  // Contact
-  await prisma.contact.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
+  // 12. Contact
+  await prisma.contact.create({
+    data: {
       legalAddress: 'г. Минск, ул. Энергетиков, 15',
       actualAddress: 'г. Минск, ул. Энергетиков, 15, каб. 301',
       email: 'info@energo-uc.by',
@@ -186,7 +198,7 @@ async function main() {
     },
   });
 
-  // About Sections
+  // 13. About Sections
   const aboutSections = [
     {
       title: 'История',
@@ -204,13 +216,9 @@ async function main() {
       icon: 'file-text',
     },
   ];
-  for (const [i, s] of aboutSections.entries()) {
-    await prisma.aboutSection.upsert({
-      where: { id: i + 1 },
-      update: s,
-      create: { ...s, sortOrder: i, isVisible: true },
-    });
-  }
+  await prisma.aboutSection.createMany({
+    data: aboutSections.map((s, i) => ({ ...s, sortOrder: i, isVisible: true })),
+  });
 
   console.log('Seed completed successfully');
 }

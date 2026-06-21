@@ -48,10 +48,10 @@ export class LessonsService {
     return lessons.map((lesson) => ({
       id: lesson.id,
       date: lesson.date.toISOString().slice(0, 10),
-      time_start: lesson.timeStart.toISOString().slice(11, 16),
-      time_end: lesson.timeEnd.toISOString().slice(11, 16),
+      timeStart: lesson.timeStart.toISOString().slice(11, 16),
+      timeEnd: lesson.timeEnd.toISOString().slice(11, 16),
       topic: lesson.topic.name,
-      lesson_type: lesson.lessonType.name,
+      lessonType: lesson.lessonType.name,
       teacher: lesson.teacher.fullName,
       classroom: lesson.classroom.name,
     }));

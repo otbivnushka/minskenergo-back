@@ -44,6 +44,7 @@ src/
     ├── users/           # CRUD users (admin only)
     ├── groups/          # CRUD groups + public schedule endpoint
     ├── lessons/         # CRUD lessons (admin/methodist)
+    ├── curriculums/     # CRUD учебные программы + many-to-many с темами
     ├── teachers/        # CRUD справочник преподавателей
     ├── classrooms/      # CRUD справочник аудиторий
     ├── topics/          # CRUD справочник тем
@@ -51,13 +52,15 @@ src/
     ├── departments/     # public GET + admin CRUD
     ├── contacts/        # public GET + admin PUT
     ├── about-sections/  # public GET + admin CRUD
+    ├── images/          # public GET, admin POST/DELETE (файлы в UPLOADS_DIR)
+    ├── slides/          # public GET, admin CRUD (слайды на главной)
     └── appeals/         # public POST + admin GET/PUT/DELETE
 ```
 
 ## API
 
 - **Base URL**: `/api/v1`
-- **Public** (no auth): groups list, group schedule, departments, contacts, about, appeals POST
+- **Public** (no auth): groups list, group schedule, curriculums list+item, departments, contacts, about, images list, appeals POST
 - **Auth**: JWT Bearer token via `POST /auth/login`. Guards: `JwtAuthGuard` + `RolesGuard` with roles `admin` / `methodist`.
 - **Users**: admin-only password hashing (bcrypt, 10 rounds).
 - **Lessons**: time fields use Prisma `DateTime @db.Time` — construct as `new Date("2000-01-01T{HH:mm}:00")`.
