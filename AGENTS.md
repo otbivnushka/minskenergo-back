@@ -54,6 +54,7 @@ src/
     ├── about-sections/  # public GET + admin CRUD
     ├── images/          # public GET, admin POST/DELETE (файлы в UPLOADS_DIR)
     ├── slides/          # public GET, admin CRUD (слайды на главной)
+    ├── warnings/        # public GET, admin/methodist CRUD
     └── appeals/         # public POST + admin GET/PUT/DELETE
 ```
 

@@ -195,6 +195,7 @@ async function main() {
       email: 'info@energo-uc.by',
       workHours: 'пн-пт 8:30–17:30, обед 13:00–14:00',
       transportInfo: 'ст.м. «Автозаводская», далее авт. 42 до остановки «Энергетиков»',
+      mapImageUrl: null,
     },
   });
 

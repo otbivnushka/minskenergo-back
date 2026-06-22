@@ -35,4 +35,12 @@ export class UpdateContactDto {
   @IsOptional()
   @IsString()
   transportInfo?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL карты',
+    example: '/uploads/map.jpg',
+  })
+  @IsOptional()
+  @IsString()
+  mapImageUrl?: string;
 }

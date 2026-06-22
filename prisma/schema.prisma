@@ -129,12 +129,13 @@ model Department {
 }
 
 model Contact {
-  id             Int    @id @default(autoincrement())
-  legalAddress   String? @map("legal_address")
-  actualAddress  String? @map("actual_address")
-  email          String? @db.VarChar(100)
-  workHours      String? @map("work_hours")
-  transportInfo  String? @map("transport_info")
+  id             Int      @id @default(autoincrement())
+  legalAddress   String?  @map("legal_address")
+  actualAddress  String?  @map("actual_address")
+  email          String?  @db.VarChar(100)
+  workHours      String?  @map("work_hours")
+  transportInfo  String?  @map("transport_info")
+  mapImageUrl    String?  @map("map_image_url")
   updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz()
 
   @@map("contacts")
@@ -161,6 +162,15 @@ model Image {
   slides Slide[]
 
   @@map("images")
+}
+
+model Warning {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("warnings")
 }
 
 model Appeal {

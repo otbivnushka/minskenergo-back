@@ -15,6 +15,7 @@ import { AboutSectionsModule } from './modules/about-sections/about-sections.mod
 import { ImagesModule } from './modules/images/images.module.js';
 import { AppealsModule } from './modules/appeals/appeals.module.js';
 import { SlidesModule } from './modules/slides/slides.module.js';
+import { WarningsModule } from './modules/warnings/warnings.module.js';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SlidesModule } from './modules/slides/slides.module.js';
     AboutSectionsModule,
     ImagesModule,
     AppealsModule,
+    WarningsModule,
     SlidesModule,
   ],
 })
