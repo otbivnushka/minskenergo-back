@@ -14,10 +14,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const exceptionResponse = exception.getResponse();
 
-    const message =
+    const message: string | string[] =
       typeof exceptionResponse === 'string'
         ? exceptionResponse
-        : ((exceptionResponse as any).message ?? exception.message);
+        : ((exceptionResponse as { message?: string | string[] }).message ??
+          exception.message);
 
     response.status(status).json({
       error: Array.isArray(message) ? message[0] : message,

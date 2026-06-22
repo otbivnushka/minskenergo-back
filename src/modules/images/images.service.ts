@@ -10,11 +10,11 @@ const uploadsDir = getUploadsDir();
 export class ImagesService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  findAll() {
     return this.prisma.image.findMany({ orderBy: { createdAt: 'desc' } });
   }
 
-  async create(dto: { filename: string; originalName: string }) {
+  create(dto: { filename: string; originalName: string }) {
     return this.prisma.image.create({ data: dto });
   }
 

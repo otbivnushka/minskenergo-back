@@ -82,7 +82,11 @@ export class ImagesController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: uploadsDir,
-        filename: (_req, file, cb) => {
+        filename: (
+          _req: Express.Request,
+          file: Express.Multer.File,
+          cb: (error: Error | null, filename: string) => void,
+        ) => {
           const ext = extname(file.originalname);
           cb(null, `${randomUUID()}${ext}`);
         },
@@ -90,15 +94,7 @@ export class ImagesController {
       limits: { fileSize: 10 * 1024 * 1024 },
     }),
   )
-  async create(
-    @UploadedFile()
-    file: {
-      filename: string;
-      originalname: string;
-      mimetype: string;
-      size: number;
-    },
-  ) {
+  async create(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('File is required');
 
     const image = await this.service.create({
