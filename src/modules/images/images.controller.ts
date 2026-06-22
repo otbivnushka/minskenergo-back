@@ -82,11 +82,7 @@ export class ImagesController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: uploadsDir,
-        filename: (
-          _req: Express.Request,
-          file: Express.Multer.File,
-          cb: (error: Error | null, filename: string) => void,
-        ) => {
+        filename: (_req, file, cb) => {
           const ext = extname(file.originalname);
           cb(null, `${randomUUID()}${ext}`);
         },

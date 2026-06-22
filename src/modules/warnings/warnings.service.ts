@@ -6,7 +6,9 @@ export class WarningsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.warning.findMany({ orderBy: { createdAt: 'desc' } });
+    return await this.prisma.warning.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async findOne(id: number) {
@@ -16,7 +18,7 @@ export class WarningsService {
   }
 
   async create(dto: { text: string }) {
-    return this.prisma.warning.create({ data: dto });
+    return await this.prisma.warning.create({ data: dto });
   }
 
   async update(id: number, dto: Partial<{ text: string }>) {
