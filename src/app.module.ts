@@ -13,6 +13,7 @@ import { DepartmentsModule } from './modules/departments/departments.module.js';
 import { ContactsModule } from './modules/contacts/contacts.module.js';
 import { AboutSectionsModule } from './modules/about-sections/about-sections.module.js';
 import { ImagesModule } from './modules/images/images.module.js';
+import { ScheduleModule } from './modules/schedule/schedule.module.js';
 import { AppealsModule } from './modules/appeals/appeals.module.js';
 import { SlidesModule } from './modules/slides/slides.module.js';
 import { WarningsModule } from './modules/warnings/warnings.module.js';
@@ -34,6 +35,7 @@ import { WarningsModule } from './modules/warnings/warnings.module.js';
     AboutSectionsModule,
     ImagesModule,
     AppealsModule,
+    ScheduleModule,
     WarningsModule,
     SlidesModule,
   ],
