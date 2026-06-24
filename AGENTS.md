@@ -45,7 +45,6 @@ src/
     ├── groups/          # CRUD groups + public schedule endpoint
     ├── lessons/         # CRUD lessons (admin/methodist)
     ├── curriculums/     # CRUD учебные программы + many-to-many с темами
-    ├── teachers/        # CRUD справочник преподавателей
     ├── classrooms/      # CRUD справочник аудиторий
     ├── topics/          # CRUD справочник тем
     ├── lesson-types/    # CRUD справочник видов занятий
@@ -53,7 +52,7 @@ src/
     ├── contacts/        # public GET + admin PUT
     ├── about-sections/  # public GET + admin CRUD
     ├── images/          # public GET, admin POST/DELETE (файлы в UPLOADS_DIR)
-    ├── schedule/        # admin POST template + admin/methodist POST generate (docx)
+    ├── schedule/        # admin/methodist POST generate (docx)
     ├── slides/          # public GET, admin CRUD (слайды на главной)
     ├── warnings/        # public GET, admin/methodist CRUD
     └── appeals/         # public POST + admin GET/PUT/DELETE

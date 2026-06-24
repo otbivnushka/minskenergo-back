@@ -29,10 +29,6 @@ export class CreateLessonDto {
   @IsNumber()
   lessonTypeId!: number;
 
-  @ApiProperty({ description: 'ID преподавателя', example: 1, type: Number })
-  @IsNumber()
-  teacherId!: number;
-
   @ApiProperty({ description: 'ID аудитории', example: 1, type: Number })
   @IsNumber()
   classroomId!: number;

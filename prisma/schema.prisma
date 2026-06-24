@@ -32,17 +32,6 @@ model Group {
   @@map("groups")
 }
 
-model Teacher {
-  id        Int      @id @default(autoincrement())
-  fullName  String   @map("full_name") @db.VarChar(200)
-  degree    String?  @db.VarChar(100)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
-
-  lessons Lesson[]
-
-  @@map("teachers")
-}
-
 model Classroom {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(200)
@@ -104,14 +93,12 @@ model Lesson {
   timeEnd      DateTime @map("time_end") @db.Time
   topicId      Int      @map("topic_id")
   lessonTypeId Int      @map("lesson_type_id")
-  teacherId    Int      @map("teacher_id")
   classroomId  Int      @map("classroom_id")
   sortOrder    Int      @default(0) @map("sort_order")
 
   group      Group      @relation(fields: [groupId], references: [id])
   topic      Topic      @relation(fields: [topicId], references: [id])
   lessonType LessonType @relation(fields: [lessonTypeId], references: [id])
-  teacher    Teacher    @relation(fields: [teacherId], references: [id])
   classroom  Classroom  @relation(fields: [classroomId], references: [id])
 
   @@map("lessons")

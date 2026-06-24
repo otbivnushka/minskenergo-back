@@ -21,7 +21,6 @@ async function main() {
     prisma.department.deleteMany(),
     prisma.lessonType.deleteMany(),
     prisma.topic.deleteMany(),
-    prisma.teacher.deleteMany(),
     prisma.classroom.deleteMany(),
     prisma.user.deleteMany(),
   ]);
@@ -59,20 +58,7 @@ async function main() {
     topicRecords[name] = record.id;
   }
 
-  // 5. Teachers
-  const teachers = [
-    { fullName: 'Иванов Иван Иванович', degree: 'к.т.н.' },
-    { fullName: 'Петрова Мария Сергеевна', degree: 'д.э.н.' },
-    { fullName: 'Сидоров Алексей Петрович', degree: 'к.ф.-м.н.' },
-    { fullName: 'Козлова Елена Андреевна', degree: null },
-  ];
-  const teacherRecords: Record<string, number> = {};
-  for (const t of teachers) {
-    const record = await prisma.teacher.create({ data: t });
-    teacherRecords[t.fullName] = record.id;
-  }
-
-  // 6. Classrooms
+  // 5. Classrooms
   const classrooms = [
     { name: 'Учебный центр, ауд. 101', address: null },
     { name: 'Учебный центр, ауд. 205', address: null },
@@ -84,7 +70,7 @@ async function main() {
     classroomRecords[c.name] = record.id;
   }
 
-  // 7. Curriculums
+  // 6. Curriculums
   const curriculumNames = [
     'Электробезопасность (II группа)',
     'Электробезопасность (III группа)',
@@ -96,7 +82,7 @@ async function main() {
     curriculumRecords[name] = record.id;
   }
 
-  // 8. Curriculums <-> Topics
+  // 7. Curriculums <-> Topics
   const curriculumTopicLinks = [
     { curriculumName: 'Электробезопасность (II группа)', topicNames: ['Документы и задачи Госэнергогазнадзора', 'Охрана труда в электроустановках', 'Первая помощь пострадавшим'] },
     { curriculumName: 'Электробезопасность (III группа)', topicNames: ['Документы и задачи Госэнергогазнадзора', 'Охрана труда в электроустановках', 'Правила технической эксплуатации', 'Первая помощь пострадавшим'] },
@@ -111,7 +97,7 @@ async function main() {
     ),
   });
 
-  // 9. Groups
+  // 8. Groups
   const group1 = await prisma.group.create({
     data: {
       name: 'Группа Э-2026-01',
@@ -129,7 +115,7 @@ async function main() {
     },
   });
 
-  // 10. Lessons
+  // 9. Lessons
   const lessons = [
     {
       groupId: group1.id,
@@ -138,7 +124,6 @@ async function main() {
       timeEnd: '14:00',
       topicName: 'Документы и задачи Госэнергогазнадзора',
       lessonTypeName: 'Лекция',
-      teacherName: 'Иванов Иван Иванович',
       classroomName: 'филиал УЦ, ауд. 207',
     },
     {
@@ -148,7 +133,6 @@ async function main() {
       timeEnd: '16:00',
       topicName: 'Охрана труда в электроустановках',
       lessonTypeName: 'Практика',
-      teacherName: 'Петрова Мария Сергеевна',
       classroomName: 'Учебный центр, ауд. 101',
     },
     {
@@ -158,7 +142,6 @@ async function main() {
       timeEnd: '12:00',
       topicName: 'Правила технической эксплуатации',
       lessonTypeName: 'Лекция',
-      teacherName: 'Сидоров Алексей Петрович',
       classroomName: 'Учебный центр, ауд. 205',
     },
   ];
@@ -170,13 +153,12 @@ async function main() {
       timeEnd: new Date(`2000-01-01T${l.timeEnd}:00`),
       topicId: topicRecords[l.topicName],
       lessonTypeId: lessonTypeRecords[l.lessonTypeName],
-      teacherId: teacherRecords[l.teacherName],
       classroomId: classroomRecords[l.classroomName],
       sortOrder: 0,
     })),
   });
 
-  // 11. Departments
+  // 10. Departments
   const departments = [
     { name: 'Отдел кадров', phone: '123-45-67', note: 'каб. 101' },
     { name: 'Бухгалтерия', phone: '123-45-68', note: 'каб. 205' },
@@ -187,7 +169,7 @@ async function main() {
     data: departments.map((d, i) => ({ ...d, sortOrder: i })),
   });
 
-  // 12. Contact
+  // 11. Contact
   await prisma.contact.create({
     data: {
       legalAddress: 'г. Минск, ул. Энергетиков, 15',
@@ -199,7 +181,7 @@ async function main() {
     },
   });
 
-  // 13. About Sections
+  // 12. About Sections
   const aboutSections = [
     {
       title: 'История',

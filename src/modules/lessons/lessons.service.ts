@@ -12,7 +12,6 @@ export class LessonsService {
         group: true,
         topic: true,
         lessonType: true,
-        teacher: true,
         classroom: true,
       },
     });
@@ -25,7 +24,6 @@ export class LessonsService {
         group: true,
         topic: true,
         lessonType: true,
-        teacher: true,
         classroom: true,
       },
     });
@@ -40,7 +38,6 @@ export class LessonsService {
       include: {
         topic: true,
         lessonType: true,
-        teacher: true,
         classroom: true,
       },
     });
@@ -52,7 +49,6 @@ export class LessonsService {
       timeEnd: lesson.timeEnd.toISOString().slice(11, 16),
       topic: lesson.topic.name,
       lessonType: lesson.lessonType.name,
-      teacher: lesson.teacher.fullName,
       classroom: lesson.classroom.name,
     }));
   }
@@ -64,7 +60,6 @@ export class LessonsService {
     timeEnd: string;
     topicId: number;
     lessonTypeId: number;
-    teacherId: number;
     classroomId: number;
     sortOrder?: number;
   }) {
@@ -76,7 +71,6 @@ export class LessonsService {
         timeEnd: new Date(`2000-01-01T${dto.timeEnd}:00`),
         topicId: dto.topicId,
         lessonTypeId: dto.lessonTypeId,
-        teacherId: dto.teacherId,
         classroomId: dto.classroomId,
         sortOrder: dto.sortOrder ?? 0,
       },
@@ -92,7 +86,6 @@ export class LessonsService {
       timeEnd: string;
       topicId: number;
       lessonTypeId: number;
-      teacherId: number;
       classroomId: number;
       sortOrder: number;
     }>,
@@ -109,7 +102,6 @@ export class LessonsService {
       data.timeEnd = new Date(`2000-01-01T${dto.timeEnd}:00`);
     if (dto.topicId !== undefined) data.topicId = dto.topicId;
     if (dto.lessonTypeId !== undefined) data.lessonTypeId = dto.lessonTypeId;
-    if (dto.teacherId !== undefined) data.teacherId = dto.teacherId;
     if (dto.classroomId !== undefined) data.classroomId = dto.classroomId;
     if (dto.sortOrder !== undefined) data.sortOrder = dto.sortOrder;
 
