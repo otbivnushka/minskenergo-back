@@ -186,17 +186,14 @@ async function main() {
     {
       title: 'История',
       content: '<p>Учебный центр основан в 1975 году и является ведущим учреждением дополнительного образования в области энергетики.</p>',
-      icon: 'history',
     },
     {
       title: 'Руководство',
       content: '<p><strong>Директор:</strong> Петров П.П.<br><strong>Заместитель директора:</strong> Иванова И.И.</p>',
-      icon: 'users',
     },
     {
       title: 'Лицензии',
       content: '<p>Лицензия Министерства образования № 12345 от 01.01.2020.</p>',
-      icon: 'file-text',
     },
   ];
   await prisma.aboutSection.createMany({

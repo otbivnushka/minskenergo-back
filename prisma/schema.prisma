@@ -132,7 +132,6 @@ model AboutSection {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(200)
   content   String
-  icon      String?  @db.VarChar(50)
   sortOrder Int      @default(0) @map("sort_order")
   isVisible Boolean  @default(true) @map("is_visible")
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz()

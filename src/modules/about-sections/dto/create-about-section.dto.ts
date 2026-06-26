@@ -22,14 +22,6 @@ export class CreateAboutSectionDto {
   content!: string;
 
   @ApiPropertyOptional({
-    description: 'Иконка',
-    example: 'fa-solid fa-graduation-cap',
-  })
-  @IsOptional()
-  @IsString()
-  icon?: string;
-
-  @ApiPropertyOptional({
     description: 'Порядок сортировки',
     example: 1,
     type: Number,
