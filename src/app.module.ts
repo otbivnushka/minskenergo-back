@@ -13,6 +13,7 @@ import { ContactsModule } from './modules/contacts/contacts.module.js';
 import { AboutSectionsModule } from './modules/about-sections/about-sections.module.js';
 import { ImagesModule } from './modules/images/images.module.js';
 import { ScheduleModule } from './modules/schedule/schedule.module.js';
+import { AppealInfoModule } from './modules/appeal-info/appeal-info.module.js';
 import { AppealsModule } from './modules/appeals/appeals.module.js';
 import { SlidesModule } from './modules/slides/slides.module.js';
 import { WarningsModule } from './modules/warnings/warnings.module.js';
@@ -32,6 +33,7 @@ import { WarningsModule } from './modules/warnings/warnings.module.js';
     ContactsModule,
     AboutSectionsModule,
     ImagesModule,
+    AppealInfoModule,
     AppealsModule,
     ScheduleModule,
     WarningsModule,

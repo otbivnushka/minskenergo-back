@@ -50,6 +50,7 @@ src/
     ├── lesson-types/    # CRUD справочник видов занятий
     ├── departments/     # public GET + admin CRUD
     ├── contacts/        # public GET + admin PUT
+    ├── appeal-info/     # public GET, admin PUT (3 статьи об обращениях граждан)
     ├── about-sections/  # public GET + admin CRUD
     ├── images/          # public GET, admin POST/DELETE (файлы в UPLOADS_DIR)
     ├── schedule/        # admin/methodist POST generate (docx)

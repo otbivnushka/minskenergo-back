@@ -139,6 +139,16 @@ model AboutSection {
   @@map("about_sections")
 }
 
+model AppealInfo {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(50)
+  title     String   @db.VarChar(200)
+  content   String
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz()
+
+  @@map("appeal_infos")
+}
+
 model Image {
   id           Int      @id @default(autoincrement())
   filename     String   @db.VarChar(500)

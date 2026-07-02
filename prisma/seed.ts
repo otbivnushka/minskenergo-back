@@ -15,6 +15,7 @@ async function main() {
     prisma.lesson.deleteMany(),
     prisma.group.deleteMany(),
     prisma.curriculum.deleteMany(),
+    prisma.appealInfo.deleteMany(),
     prisma.appeal.deleteMany(),
     prisma.aboutSection.deleteMany(),
     prisma.contact.deleteMany(),
@@ -198,6 +199,16 @@ async function main() {
   ];
   await prisma.aboutSection.createMany({
     data: aboutSections.map((s, i) => ({ ...s, sortOrder: i, isVisible: true })),
+  });
+
+  // 12. Appeal Info
+  const appealInfoItems = [
+    { key: 'superior-org', title: 'Вышестоящая организация', content: '' },
+    { key: 'review-procedure', title: 'Порядок рассмотрения обращений', content: '' },
+    { key: 'personal-reception', title: 'Личный прием', content: '' },
+  ];
+  await prisma.appealInfo.createMany({
+    data: appealInfoItems,
   });
 
   console.log('Seed completed successfully');
